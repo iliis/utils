@@ -16,23 +16,26 @@ function progress( percent, minmax )
 %   
 %   progress(300, [200,400]) -> 50%
 
-global progress_handle;
+persistent progress_handle;
 
 if nargin == 1
     minmax = [0 1];
 end
 
+% clip 'percent' value to valid range
 percent = min(percent, minmax(2));
 percent = max(percent, minmax(1));
 
-if (~exist('progress_handle', 'var') || ~ishandle(progress_handle))
+% create plot for progress bar if it doesn't yet exist
+ish = ishghandle(progress_handle);
+if (isempty(progress_handle) || isempty(ish) || ~ish(1))
     progress_handle = figure();
     set(progress_handle, 'units', 'normalized');
+    % center on screen
     set(progress_handle, 'position',[.25 .425 .5 .15]);
 end
 
 hold on;
-
 
 fill([minmax(1) percent percent minmax(1)], [0 0 1 1],'g');
 fill([percent minmax(2) minmax(2) percent], [0 0 1 1],'r'); 
@@ -42,10 +45,14 @@ set(gca, 'ytick', []); % disable y axis
 
 hold off;
 
+% close progress bar plot window if we're done (i.e. progress == 100%)
 if(percent == minmax(2))
     close(progress_handle);
     clear progress_handle;
 end
+
+% force update of plot window (and the entire rest of the MATLAB GUI)
+drawnow
 
 end
 
