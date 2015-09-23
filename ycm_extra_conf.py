@@ -9,18 +9,19 @@ flags = [
 #'-Wextra',
 #'-Werror',
 #'-fexceptions',
+'-DSDCC', # yes, we are masquerading as SDCC ;)
 '-DMASTER',
 '-DVERSION_GIT=clang_autocompleter',
 '-DMINI_KIT',
+'-DMINI_DVK',
 '-DMCU_SLEEP',
 '-DUSE_DBGLINK',
 '-DDBG_PACKETS',
 '-DERP_VERSION=2',
 # remove SDCC specific keywords (they are not needed for code completion anyways)
 '-D__data=',
-'-D__autodata=',
+#'-D__autodata=',
 '-D__xdata=',
-'-D__autodata=',
 '-D__reentrant=',
 '-D__reentrantb=',
 '-D__generic=',
@@ -28,12 +29,14 @@ flags = [
 '-D__xcode=',
 '-D__naked=',
 '-D__interrupt(x)=',
-'-DINT_RADIO=',
 '-D__bit=int',
 '-Dbool=_Bool',
-'-D__sfr=',
+'-D__sfr=unsigned char',
+'-D__sfr16=unsigned int',
+'-D__sfr32=unsigned long',
 '-D__sbit=int',
 '-D__at(x)=',
+'-Dnop()=do{}while(0)',
 # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
 # language to use when compiling headers. So it will guess. Badly. So C++
 # headers will be compiled as C headers. You don't want that so ALWAYS specify
@@ -48,7 +51,7 @@ flags = [
 '-x',
 'c',
 '-I',
-'.',
+'./',
 '-I',
 './MASTER',
 '-I',
@@ -71,6 +74,8 @@ flags = [
 '/usr/share/microfoot/libax5051/include',
 '-I',
 '/usr/share/microfoot/libmf/source',
+'-I',
+'./build_cmake/'
 ]
 
 
